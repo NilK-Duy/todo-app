@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { CreateNewTodo } from "./components/CreateNewTodo";
 import { TodoList } from "./components/TodoList";
@@ -6,7 +6,15 @@ import { TodoList } from "./components/TodoList";
 export type TodoType = { id: string; name: string; isCompleted: boolean };
 
 function App() {
-  const [todoList, setTodoList] = useState<TodoType[]>([]);
+  const [todoList, setTodoList] = useState<TodoType[]>(() => {
+    const savedTodoList = JSON.parse(localStorage.getItem("todoList") ?? "[]");
+    if (savedTodoList?.length) {
+      return savedTodoList;
+    }
+
+    return [];
+  });
+
   const [newTodoString, setNewTodoString] = useState("");
 
   const onNewTodoChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,6 +42,10 @@ function App() {
       });
     });
   };
+
+  useEffect(() => {
+    localStorage.setItem("todoList", JSON.stringify(todoList));
+  }, [todoList]);
 
   return (
     <>
