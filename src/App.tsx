@@ -28,8 +28,10 @@ function App() {
       isCompleted: false,
     };
 
-    setTodoList([newTodoItem, ...todoList]);
-    setNewTodoString("");
+    if (newTodoItem.name.length) {
+      setTodoList([newTodoItem, ...todoList]);
+      setNewTodoString("");
+    }
   };
 
   const updateIsCompleted = (todoId: string) => {
